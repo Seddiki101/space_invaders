@@ -1,45 +1,46 @@
 #include "Fonctions.hpp"
-#include "Player.hpp"
-#include "Background.hpp"
-#include "Config.hpp"
-#include <ostream>
-#include <iostream>
 
 int main() {
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
     
+    // Initializing
     if (!initSDL(window, renderer, Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT)) {
         return 1;
     }
+    
+    GameState state{
+         renderer,
+         Player(renderer),
+         Background(renderer),
+        {},    // enemies
+        nullptr, // boss
+        0,     // currentWave
+        false, // bossSpawned
+        true   // running
+    };
+    srand(time(NULL));
 
-    Player player(renderer);
-    Background background(renderer);
-    bool running = true;
-    SDL_Event event;
-
-    while (running) {
-        // Process input
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT)
-                running = false;
-            player.handleInput(event);
-        }
-
-        // Update game state
-        player.update();
-        background.update();
-
-        // Render
-        SDL_RenderClear(renderer);
-        background.render();
-        player.render();
-        SDL_RenderPresent(renderer);
+    // Main game loop
+    while (state.running) {
+            SDL_Event event; 
+        handleInput(event, state);
+        handleWaveManagement(state);
         
-     //   std::cout << "Game loop running..." << std::endl; // Debug print
-
+        updateEnemiesAndBoss(state);
+        
+        // Update core game elements
+        state.player.update();
+        state.background.update();
+        
+        // Render everything
+        renderGame(renderer, state);
+        
         SDL_Delay(16); // ~60 FPS
     }
+
+    // Cleanup
+    delete state.boss;
 
     closeSDL(window, renderer);
     return 0;

@@ -1,6 +1,11 @@
-#include "Fonctions.hpp"
+#include <cstdlib>
+#include <ctime>
 #include <ostream>
 #include <iostream>
+
+
+#include "Fonctions.hpp"
+#include "Config.hpp"
 
 bool initSDL(SDL_Window*& window, SDL_Renderer*& renderer, int width, int height) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -68,4 +73,62 @@ void renderText(SDL_Renderer* renderer, const char* text, SDL_Color color, int x
     SDL_DestroyTexture(textTexture);
 }
 
+void handleInput(SDL_Event& event, GameState& state) {
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT || 
+            (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
+            state.running = false;
+        }
+        state.player.handleInput(event);
+    }
+}
 
+void handleWaveManagement(GameState& state) {
+    if (!state.bossSpawned && state.enemies.empty()) {
+        if (state.currentWave < 3) {
+            int waveSize = Config::WAVE_MAX_ENEMIES[state.currentWave];
+            for (int i = 0; i < waveSize; i++) {
+                state.enemies.emplace_back(state.player.getRenderer() );
+            }
+            state.currentWave++;
+        } else {
+            state.boss = new Enemy(state.player.getRenderer(), true);
+            state.bossSpawned = true;
+        }
+    }
+}
+
+
+
+void updateEnemiesAndBoss(GameState& state) {
+    for (auto& enemy : state.enemies) {
+        enemy.update();
+    }
+    
+    if (state.boss) {
+        state.boss->update();
+    }
+}
+
+
+void renderGame(SDL_Renderer* renderer, const GameState& state) {
+    SDL_RenderClear(renderer);
+    
+    // Render background
+    state.background.render();
+    
+    // Render player
+    state.player.render();
+    
+    // Render enemies
+    for (const auto& enemy : state.enemies) {
+        enemy.render();
+    }
+    
+    // Render boss
+    if (state.boss) {
+        state.boss->render();
+    }
+    
+    SDL_RenderPresent(renderer);
+}

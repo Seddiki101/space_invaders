@@ -28,7 +28,7 @@ void Background::update() {
         position2.x = Config::SCREEN_WIDTH;
 }
 
-void Background::render() {
+void Background::render()const {
     SDL_RenderCopy(renderer, texture, NULL, &position1);
     SDL_RenderCopy(renderer, texture, NULL, &position2);
 }

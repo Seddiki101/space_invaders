@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <mutex>
 #include "Config.hpp"
 
 class Player {
@@ -9,11 +10,21 @@ public:
     ~Player();
     void handleInput(const SDL_Event& event);
     void update();
-    void render();
+    void render()const;
     
-    SDL_Rect position;
-    int health = 100;
-    int score = 0;
+    int getHealth() ;
+    void setHealth(int newHealth);
+    int getScore() ;
+    void setScore(int newScore);
+    
+    void increaseHealth(int amount);
+    void increaseScore(int amount);
+    
+    void decreaseHealth(int amount);
+    void decreaseScore(int amount);
+    
+     SDL_Renderer* getRenderer() const ;
+
 
 private:
     SDL_Renderer* renderer;
@@ -21,5 +32,13 @@ private:
     int velocityX = 0;
     int velocityY = 0;
     void keepInBounds();
+    
+    //this is useless because currently this is single threaded
+    std::mutex mtx;
+    
+    SDL_Rect position;
+    int health = 100;
+    int score = 0;
+    
 };
 

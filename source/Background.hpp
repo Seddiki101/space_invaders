@@ -8,7 +8,7 @@ public:
     Background(SDL_Renderer* renderer);
     ~Background();
     void update();
-    void render();
+    void render()const;
 
 private:
     SDL_Renderer* renderer;
