@@ -3,12 +3,16 @@
 #include <cstdlib>
 #include <ctime>
 
-Enemy::Enemy(SDL_Renderer* renderer, bool isBoss) : renderer(renderer) {
-    if(isBoss) {
+Enemy::Enemy(SDL_Renderer *renderer, bool isBoss) : renderer(renderer)
+{
+    if (isBoss)
+    {
         texture = IMG_LoadTexture(renderer, Config::BOSS_TEXTURE.c_str());
         health = Config::BOSS_HEALTH;
         speed = Config::BOSS_SPEED;
-    } else {
+    }
+    else
+    {
         int randomIndex = rand() % 3;
         texture = IMG_LoadTexture(renderer, Config::ENEMY_TEXTURES[randomIndex].c_str());
         health = Config::ENEMY_HEALTH;
@@ -19,42 +23,56 @@ Enemy::Enemy(SDL_Renderer* renderer, bool isBoss) : renderer(renderer) {
         Config::SCREEN_WIDTH - Config::ENEMY_WIDTH,
         Config::SPAWN_AREA_MIN_Y + (rand() % (Config::SPAWN_AREA_MAX_Y - Config::SPAWN_AREA_MIN_Y)),
         Config::ENEMY_WIDTH,
-        Config::ENEMY_HEIGHT
-    };
+        Config::ENEMY_HEIGHT};
 
     randomizeMovement();
 }
 
-void Enemy::update() {
+void Enemy::update()
+{
     position.x += velocityX;
     position.y += velocityY;
     keepInBounds();
-    
+
     // Randomly change direction
-    if(rand() % 100 < 2) { // 2% chance each frame
+    if (rand() % 100 < 2)
+    { // 2% chance each frame
         randomizeMovement();
     }
 }
 
-void Enemy::render() const{
+void Enemy::render() const
+{
     SDL_RenderCopy(renderer, texture, NULL, &position);
 }
 
-bool Enemy::isAlive() const {
+bool Enemy::isAlive() const
+{
     return health > 0;
 }
 
-void Enemy::randomizeMovement() {
+void Enemy::randomizeMovement()
+{
     velocityX = (rand() % 100 - 50) / 50.0f * speed;
     velocityY = (rand() % 100 - 50) / 50.0f * speed;
 }
 
-void Enemy::keepInBounds() {
+void Enemy::keepInBounds()
+{
     // Vertical bounds
-    if(position.y < Config::SPAWN_AREA_MIN_Y) position.y = Config::SPAWN_AREA_MIN_Y;
-    if(position.y > Config::SPAWN_AREA_MAX_Y - position.h) position.y = Config::SPAWN_AREA_MAX_Y - position.h;
-    
+    if (position.y < Config::SPAWN_AREA_MIN_Y)
+        position.y = Config::SPAWN_AREA_MIN_Y;
+    if (position.y > Config::SPAWN_AREA_MAX_Y - position.h)
+        position.y = Config::SPAWN_AREA_MAX_Y - position.h;
+
     // Horizontal bounds (right side only)
-    if(position.x < Config::ENEMY_MOVE_BOUNDARY) position.x = Config::ENEMY_MOVE_BOUNDARY;
-    if(position.x > Config::SCREEN_WIDTH - position.w) position.x = Config::SCREEN_WIDTH - position.w;
+    if (position.x < Config::ENEMY_MOVE_BOUNDARY)
+        position.x = Config::ENEMY_MOVE_BOUNDARY;
+    if (position.x > Config::SCREEN_WIDTH - position.w)
+        position.x = Config::SCREEN_WIDTH - position.w;
+}
+
+SDL_Rect Enemy::getPosition() const
+{
+    return position;
 }
