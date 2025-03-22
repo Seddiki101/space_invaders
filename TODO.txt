@@ -1,0 +1,9 @@
+Power-Ups
+-Increase player fire rate.
+-Multi-shot.
+-Temporarily shield the player.
+
+Enemy Variety
+-Fast-moving enemies.
+Tanky enemies with high health
+-Enemies that shoot in patterns
