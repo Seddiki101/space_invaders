@@ -69,18 +69,27 @@ void Player::keepInBounds()
         position.y = Config::SCREEN_HEIGHT - position.h;
 }
 
-int Player::getHealth()
+
+SDL_Renderer *Player::getRenderer() const { return renderer; }
+
+SDL_Rect Player::getPosition() const
 {
-    std::lock_guard<std::mutex> lock(mtx);
+    return position;
+}
+
+
+
+
+int Player::getHealth() const
+{
     return health;
 }
 
 // Setter for health
 void Player::setHealth(int newHealth)
 {
-    std::lock_guard<std::mutex> lock(mtx);
     if (newHealth >= 0)
-    { // Optional validation to ensure health doesn't go below 0
+    { 
         health = newHealth;
     }
     else
@@ -90,18 +99,16 @@ void Player::setHealth(int newHealth)
 }
 
 // Getter for score
-int Player::getScore()
+int Player::getScore() const
 {
-    std::lock_guard<std::mutex> lock(mtx);
     return score;
 }
 
 // Setter for score
 void Player::setScore(int newScore)
 {
-    std::lock_guard<std::mutex> lock(mtx);
     if (newScore >= 0)
-    { // Optional validation to ensure score doesn't go below 0
+    { 
         score = newScore;
     }
     else
@@ -112,7 +119,6 @@ void Player::setScore(int newScore)
 
 void Player::increaseHealth(int amount)
 {
-    std::lock_guard<std::mutex> lock(mtx);
     if (amount > 0)
     {
         health += amount;
@@ -125,7 +131,6 @@ void Player::increaseHealth(int amount)
 
 void Player::increaseScore(int amount)
 {
-    std::lock_guard<std::mutex> lock(mtx);
     if (amount > 0)
     {
         score += amount;
@@ -138,33 +143,43 @@ void Player::increaseScore(int amount)
 
 void Player::decreaseHealth(int amount)
 {
-    std::lock_guard<std::mutex> lock(mtx);
     if (amount > 0)
     {
         health -= amount;
+         if (health < 0) health = 0;
     }
     else
     {
-        std::cerr << "Increase amount must be positive!" << std::endl;
+        std::cerr << "Decrease amount must be positive!" << std::endl;
     }
 }
 
 void Player::decreaseScore(int amount)
 {
-    std::lock_guard<std::mutex> lock(mtx);
     if (amount > 0)
     {
         score -= amount;
     }
     else
     {
-        std::cerr << "Increase amount must be positive!" << std::endl;
+        std::cerr << "Decrease amount must be positive!" << std::endl;
     }
 }
 
-SDL_Renderer *Player::getRenderer() const { return renderer; }
 
-SDL_Rect Player::getPosition() const
+SDL_Rect Player::getCollisionBox() const
 {
-    return position;
+    // You can define a collision box different from the rendering position
+    // based on your Config values if needed.
+    // For example, a smaller box centered within the sprite:
+    SDL_Rect collisionBox;
+    collisionBox.w = Config::PLAYER_COLLISION_WIDTH;
+    collisionBox.h = Config::PLAYER_COLLISION_HEIGHT;
+    collisionBox.x = position.x + (position.w - collisionBox.w) / 2;
+    collisionBox.y = position.y + (position.h - collisionBox.h) / 2;
+
+    // If the collision box is the same as the position, just return position:
+    // return position;
+
+    return collisionBox;
 }

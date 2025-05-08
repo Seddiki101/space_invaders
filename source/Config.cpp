@@ -14,8 +14,8 @@ const int Config::ENEMY_WIDTH = 64;
 const int Config::ENEMY_HEIGHT = 64;
 const float Config::ENEMY_SPEED = 2.5f;
 const float Config::BOSS_SPEED = 1.2f;
-const int Config::ENEMY_HEALTH = 100;
-const int Config::BOSS_HEALTH = 500;
+const int Config::ENEMY_HEALTH = 29;
+const int Config::BOSS_HEALTH = 100;
 const std::string Config::ENEMY_TEXTURES[3] = {
     "./images/e1.png",
     "./images/e2.png",
@@ -34,7 +34,7 @@ const int Config::PLAYER_BULLET_SPEED = 10; // Negative for upward movement
 const int Config::ENEMY_BULLET_SPEED = -5;  // Positive for downward movement
 
 const int Config::PLAYER_BULLET_DAMAGE = 10;
-const int Config::ENEMY_BULLET_DAMAGE = 5;
+const int Config::ENEMY_BULLET_DAMAGE = 8;
 
 const std::string Config::PLAYER_BULLET_TEXTURE = "./images/playerBullet.png";
 const std::string Config::ENEMY_BULLET_TEXTURE = "./images/enemyBullet1.png";
