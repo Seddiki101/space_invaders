@@ -7,3 +7,6 @@ Enemy Variety
 -Fast-moving enemies.
 Tanky enemies with high health
 -Enemies that shoot in patterns
+
+// user can see cannon cooldown ( time between hits )
+

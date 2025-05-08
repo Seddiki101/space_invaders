@@ -9,8 +9,11 @@ public:
     void update();
     void render() const;
     bool isAlive() const;
+    
+   void decreaseHealth(int amount);
 
     SDL_Rect getPosition() const;
+    SDL_Rect getCollisionBox() const;
 
 private:
     SDL_Renderer *renderer;

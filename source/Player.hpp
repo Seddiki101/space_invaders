@@ -13,9 +13,9 @@ public:
     void update();
     void render() const;
 
-    int getHealth();
+    int getHealth() const;
     void setHealth(int newHealth);
-    int getScore();
+    int getScore() const;
     void setScore(int newScore);
 
     void increaseHealth(int amount);
@@ -27,6 +27,7 @@ public:
     SDL_Renderer *getRenderer() const;
 
     SDL_Rect getPosition() const;
+    SDL_Rect getCollisionBox() const;
 
 private:
     SDL_Renderer *renderer;
@@ -36,7 +37,7 @@ private:
     void keepInBounds();
 
     // this is useless because currently this is single threaded
-    std::mutex mtx;
+    // std::mutex mtx;
 
     SDL_Rect position;
     int health = 100;

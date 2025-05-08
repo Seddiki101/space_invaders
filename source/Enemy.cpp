@@ -2,6 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 Enemy::Enemy(SDL_Renderer *renderer, bool isBoss) : renderer(renderer)
 {
@@ -74,5 +75,27 @@ void Enemy::keepInBounds()
 
 SDL_Rect Enemy::getPosition() const
 {
+    return position;
+}
+
+
+
+void Enemy::decreaseHealth(int amount)
+{
+    if (amount > 0)
+    {
+        health -= amount;
+        if (health < 0) health = 0; // Ensure health doesn't go below zero
+    }
+    else
+    {
+        std::cerr << "Decrease amount must be positive!" << std::endl;
+    }
+}
+
+
+SDL_Rect Enemy::getCollisionBox() const
+{
+    // For simplicity, let's use the same rectangle as the render position for enemies.
     return position;
 }

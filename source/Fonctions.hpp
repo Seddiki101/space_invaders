@@ -39,16 +39,27 @@ struct GameObject
     SDL_Rect collisionBox;
 };
 
-bool initSDL(SDL_Window *&window, SDL_Renderer *&renderer, int width, int height);
+bool initSDL(SDL_Window *&window, SDL_Renderer *&renderer,  TTF_Font*& font , int width, int height);
 void closeSDL(SDL_Window *window, SDL_Renderer *renderer);
+
+// Text rendering helper functions
 void renderText(SDL_Renderer *renderer, const char *text, SDL_Color color, int x, int y, TTF_Font *font);
+void renderHealthText(SDL_Renderer* renderer, const Player& player, TTF_Font* font);
+void renderScoreText(SDL_Renderer* renderer, const Player& player, TTF_Font* font);
+
 bool loadBulletTextures(SDL_Renderer *renderer, GameState &state);
 
 void handleInput(SDL_Event &event, GameState &state);
+void renderGame(SDL_Renderer *renderer, const GameState &state ,  TTF_Font* font  );
+
 void handleWaveManagement(GameState &state);
 void updateEnemiesAndBoss(GameState &state);
-void renderGame(SDL_Renderer *renderer, const GameState &state);
 
 void updateBullets(GameState &state, int screenWidth, int screenHeight);
 void handleEnemyShooting(GameState &state, float deltaTime);
 void handlePlayerShooting(GameState &state, float deltaTime);
+
+bool checkCollision(const SDL_Rect& a, const SDL_Rect& b);
+void checkPlayerEnemyCollisions(GameState& state);
+
+void checkGameOver(const Player& player, bool& running); 
